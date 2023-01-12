@@ -1,0 +1,66 @@
+<section class="m-2">
+    <div
+        class="flex sm:flex-row flex-col justify-between  p-2 m-2 space-x-2 items-center align-middle sm:items-baseline">
+        <div class="flex h-[3.6rem] sm:h-[3.6rem] md:h-[3.6rem] lg:h-[3.6rem]">
+            <button title="Add Employee" mat-raised-button color="primary" (click)="addEmployee()">Add Employee</button>
+        </div>
+        <div>
+            <mat-form-field appearance="outline" class="w-[20rem] sm:w-[30rem] md:w-[40rem] lg:w-[50rem]">
+                <mat-label>Search</mat-label>
+                <input matInput (ngModelChange)="searchEmployees(key.value)" #key="ngModel" ngModel
+                    placeholder="Search">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div *ngIf="employees.length > 0">
+        <!-- // max widtj 90% -->
+        <div class="max-w-7xl mx-auto text-center ">
+            <div class="space-y-12">
+                <div class="space-y-5 sm:mx-auto sm:max-w-xl sm:space-y-4 lg:max-w-5xl">
+                    <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Meet our team</h2>
+                    <p class="text-xl text-gray-500">Introducing the Dynamic Duo behind the Scenes: Meet our Exceptional
+                        Team</p>
+                </div>
+                <ul role="list"
+                    class="mx-auto space-y-16 sm:grid sm:grid-cols-2 sm:gap-16 sm:space-y-0 lg:grid-cols-3 lg:max-w-5xl">
+                    <mat-card *ngFor="let employee of employees">
+                        <li>
+                            <div class="space-y-6">
+                                <img class="mx-auto h-40 w-40 rounded-full xl:w-56 xl:h-56" src="{{employee?.imageUrl}}"
+                                    alt="">
+                                <div class="space-y-2">
+
+                                    <mat-card-header class="flex justify-center">
+                                        <mat-card-title>{{employee?.name}}</mat-card-title>
+                                        <mat-card-subtitle>{{employee?.jobTitle}}</mat-card-subtitle>
+                                    </mat-card-header>
+                                    <mat-card-content>
+                                        <a href="mailto:{{employee?.email}}">
+                                            <p class="text-indigo-600">Email: {{employee?.email}}</p>
+                                        </a>
+                                        <a href="tel:{{employee?.phone}}">
+                                            <p class="text-indigo-600">Phone: {{employee?.phone}}</p>
+                                        </a>
+                                    </mat-card-content>
+                                    <mat-card-actions>
+                                        <button mat-raised-button color="primary"
+                                            (click)="openDialog(employee)">Edit</button>
+                                        <button mat-raised-button color="warn"
+                                            (click)="confirmDelete(employee)">Delete</button>
+                                    </mat-card-actions>
+                                </div>
+                            </div>
+                        </li>
+                    </mat-card>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="employees.length == 0">
+        <div class="flex justify-center m-5 p-5">
+            <h1>No Employees Found</h1>
+        </div>
+    </div>
+</section>
