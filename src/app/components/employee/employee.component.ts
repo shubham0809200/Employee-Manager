@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Employee } from 'src/app/model/employee.model';
 import { EmployeeService } from 'src/app/services/employee/employee.service';
 import { DeleteEmployeeComponent } from '../delete-employee/delete-employee.component';
@@ -16,7 +17,8 @@ export class EmployeeComponent implements OnInit {
 
   constructor(
     private employeeService: EmployeeService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public _snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -29,25 +31,29 @@ export class EmployeeComponent implements OnInit {
         this.employees = response;
       },
       (error: HttpErrorResponse) => {
-        console.log(error.message);
+        this._snackBar.open('Error getting employees', 'OK', {
+          duration: 3000,
+        });
       }
     );
   }
 
   openDialog(employee: Employee) {
-    const dialogRef = this.dialog.open(EmployeeFormComponent, {
-      maxWidth: '50%',
-      minWidth: '30%',
-      data: employee,
-    });
+    try {
+      const dialogRef = this.dialog.open(EmployeeFormComponent, {
+        maxWidth: '50%',
+        minWidth: '30%',
+        data: employee,
+      });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      this.getEmployees();
-    });
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('The dialog was closed');
+        this.getEmployees();
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
-
-  // use dialog to add new employee
 
   addEmployee() {
     const employee: Employee = {
@@ -63,27 +69,19 @@ export class EmployeeComponent implements OnInit {
   }
 
   confirmDelete(employee: Employee) {
-    const dialogRef = this.dialog.open(DeleteEmployeeComponent, {
-      width: '30%',
-      data: employee,
-    });
+    try {
+      const dialogRef = this.dialog.open(DeleteEmployeeComponent, {
+        width: '30%',
+        data: employee,
+      });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed');
-      this.getEmployees();
-    });
-
-    // if (confirm('Are you sure you want to delete this employee?')) {
-    //   this.employeeService.deleteEmployee(employee.id).subscribe(
-    //     (response: void) => {
-    //       console.log(response);
-    //       this.getEmployees();
-    //     },
-    //     (error: HttpErrorResponse) => {
-    //       console.log(error.message);
-    //     }
-    //   );
-    // }
+      dialogRef.afterClosed().subscribe((result) => {
+        console.log('The dialog was closed');
+        this.getEmployees();
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // search Employee

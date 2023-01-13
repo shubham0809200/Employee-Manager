@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Employee } from 'src/app/model/employee.model';
 import { EmployeeService } from 'src/app/services/employee/employee.service';
 
@@ -26,13 +27,13 @@ export class EmployeeFormComponent implements OnInit {
     email: new FormControl('', [Validators.required, Validators.email]),
     jobTitle: new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required]),
-    imageUrl: new FormControl('', [Validators.required]),
+    imageUrl: new FormControl('', []),
   });
 
   constructor(
     public dialogRef: MatDialogRef<EmployeeFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Employee,
-
+    public _snackBar: MatSnackBar,
     public employeeService: EmployeeService
   ) {}
 
@@ -45,20 +46,42 @@ export class EmployeeFormComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.employee.id === 0) {
-      this.employeeService
-        .addEmployee(this.employee)
-        .subscribe((response: Employee) => {
-          console.log(response);
-          this.onNoClick();
-        });
-    } else {
-      this.employeeService
-        .updateEmployee(this.employee)
-        .subscribe((response: Employee) => {
-          console.log(response);
-          this.onNoClick();
-        });
+    try {
+      if (this.employee.id === 0) {
+        try {
+          this.employeeService
+            .addEmployee(this.employee)
+            .subscribe((response: Employee) => {
+              this._snackBar.open('Employee added successfully', 'OK', {
+                duration: 3000,
+              });
+              this.onNoClick();
+            });
+        } catch (error) {
+          this._snackBar.open('Error adding employee', 'OK', {
+            duration: 3000,
+          });
+        }
+      } else {
+        try {
+          this.employeeService
+            .updateEmployee(this.employee)
+            .subscribe((response: Employee) => {
+              this._snackBar.open('Employee updated successfully', 'OK', {
+                duration: 3000,
+              });
+              this.onNoClick();
+            });
+        } catch (error) {
+          this._snackBar.open('Error updating employee', 'OK', {
+            duration: 3000,
+          });
+        }
+      }
+    } catch (error) {
+      this._snackBar.open('Error adding employee', 'OK', {
+        duration: 3000,
+      });
     }
   }
 }

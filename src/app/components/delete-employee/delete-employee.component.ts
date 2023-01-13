@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Employee } from 'src/app/model/employee.model';
 import { EmployeeService } from 'src/app/services/employee/employee.service';
 
@@ -13,22 +14,23 @@ export class DeleteEmployeeComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<DeleteEmployeeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Employee,
-    public employeeService: EmployeeService
+    public employeeService: EmployeeService,
+    public _snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {}
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-
   public deleteEmployee(): void {
     this.employeeService.deleteEmployee(this.data.id).subscribe(
       (response: void) => {
-        console.log(response);
+        this._snackBar.open('Employee deleted successfully', 'OK', {
+          duration: 3000,
+        });
       },
       (error: HttpErrorResponse) => {
-        console.log(error.message);
+        this._snackBar.open('Error deleting employee', 'OK', {
+          duration: 3000,
+        });
       }
     );
     this.closeDialog();

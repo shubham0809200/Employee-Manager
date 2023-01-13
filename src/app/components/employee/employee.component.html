@@ -24,10 +24,16 @@
                 </div>
                 <ul role="list"
                     class="mx-auto space-y-16 sm:grid sm:grid-cols-2 sm:gap-16 sm:space-y-0 lg:grid-cols-3 lg:max-w-5xl">
-                    <mat-card *ngFor="let employee of employees">
+                    <!-- on hover effect  -->
+                    <mat-card *ngFor="let employee of employees" class="group hover:shadow-2xl">
                         <li>
                             <div class="space-y-6">
-                                <img class="mx-auto h-40 w-40 rounded-full xl:w-56 xl:h-56" src="{{employee?.imageUrl}}"
+                                <img *ngIf="employee.imageUrl != ''"
+                                    class="mx-auto h-40 w-40 rounded-full xl:w-56 xl:h-56" src="{{employee?.imageUrl}}"
+                                    alt="">
+                                <img *ngIf="employee.imageUrl == ''"
+                                    class="mx-auto h-40 w-40 rounded-full xl:w-56 xl:h-56"
+                                    src="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png"
                                     alt="">
                                 <div class="space-y-2">
 
@@ -60,7 +66,7 @@
 
     <div *ngIf="employees.length == 0">
         <div class="flex justify-center m-5 p-5">
-            <h1>No Employees Found</h1>
+            <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">No Employees Found</h1>
         </div>
     </div>
 </section>
